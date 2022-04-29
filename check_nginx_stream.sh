@@ -1,4 +1,11 @@
 #!/bin/bash
+################
+# Scripts name : check_nginx_stream.sh
+# Usage        : ./check_nginx_stream.sh
+# Description  : NGINX負荷分散対象ポートチェックスクリプト
+# Create       : 2022/04/30 tech-mmmm (https://tech-mmmm.blogspot.com/)
+# Modify       : 
+################
 
 rc=0      # Return code
 array=()  # サーバ＆ポート一覧保存用配列
