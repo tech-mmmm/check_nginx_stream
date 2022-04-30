@@ -14,11 +14,11 @@ config_file="/etc/nginx/stream.conf.d/servers.stream.conf" # 設定ファイル�
 # Configからサーバ＆ポート情報抽出
 while read line || [ -n "${line}" ]; do
   # upstream行の設定から負荷分散対象グループ名を取得
-  if [ $(echo ${line} | egrep "^upstream.*{" | wc -l) -ne 0 ]; then
+  if [ $(echo ${line} | grep -c -E "^upstream.*{") -ne 0 ]; then
     pool=$(echo ${line} | cut -d" " -f2)
   fi
   # server行の設定から、負荷分散対象サーバの情報を取得
-  if [ $(echo ${line} | egrep "^server.*;" | wc -l) -ne 0 ]; then
+  if [ $(echo ${line} | grep -c -E "^server.*;") -ne 0 ]; then
     member=$(echo ${line} | cut -d" " -f2 | tr -d ";")
     array+=("${pool}:${member}")
   fi
@@ -29,7 +29,7 @@ for i in ${array[@]}
 do
   # ポート番号取得
   server=$(echo $i | cut -d":" -f1)
-  port=$(cat /etc/nginx/stream.conf.d/servers.stream.conf | egrep -B1 "proxy_pass.*${server}" | grep listen | awk '{print $3}' | tr -d ";")
+  port=$(cat /etc/nginx/stream.conf.d/servers.stream.conf | grep -E -B1 "proxy_pass.*${server}" | grep listen | awk '{print $3}' | tr -d ";")
   if [ "${port}" == "" ]; then
     port="tcp"
   fi
