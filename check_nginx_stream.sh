@@ -22,11 +22,10 @@ while read line || [ -n "${line}" ]; do
     member=$(echo ${line} | cut -d" " -f2 | tr -d ";")
     array+=("${pool}:${member}")
   fi
-done < <(cat ${config_file})
+done < "${config_file}"
 
 # ポートスキャン
-for i in ${array[@]}
-do
+for i in ${array[@]} ; do
   # ポート番号取得
   server=$(echo $i | cut -d":" -f1)
   port=$(cat /etc/nginx/stream.conf.d/servers.stream.conf | grep -E -B1 "proxy_pass.*${server}" | grep listen | awk '{print $3}' | tr -d ";")
